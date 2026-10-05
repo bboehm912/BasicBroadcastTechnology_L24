@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,6 +67,7 @@ body {
   font-size: 0.95em;
   cursor: pointer;
   color: #334155;
+  transition: all 0.2s ease;
 }
 .tab-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
 
@@ -162,8 +164,10 @@ body {
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s;
 }
-.ctrl-btn:disabled { background: #94a3b8; }
+.ctrl-btn:hover { background: var(--primary-dark); }
+.ctrl-btn:disabled { background: #94a3b8; cursor: not-allowed; }
 
 .resource-card {
   background: #f8fafc;
@@ -177,29 +181,162 @@ body {
   align-items: center;
 }
 
+/* FORM & INTERACTIVE QUESTION STYLES */
 .form-group {
-  margin-bottom: 22px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-label { font-weight: bold; margin-bottom: 6px; display: block; }
-input, textarea, select {
+
+.form-group:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1);
+}
+
+.question-title {
+  font-weight: 600;
+  font-size: 1.05em;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+  display: block;
+  line-height: 1.4;
+}
+
+input[type="text"], input[type="date"], select, textarea {
   width: 100%;
-  padding: 10px;
+  padding: 11px 14px;
   border: 1px solid var(--border);
   border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95em;
+  box-sizing: border-box;
+  background: #f8fafc;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #f8fafc;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s;
+  font-weight: normal;
+}
+
+.option-card:hover {
+  background: #f0fdf4;
+  border-color: var(--primary);
+}
+
+.option-card input[type="radio"],
+.option-card input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .submit-btn {
-  width: 100%;
+  flex: 1;
   background: var(--primary);
   color: white;
   padding: 14px;
-  font-size: 1.05em;
+  font-size: 1em;
   font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  flex: 1;
+  background: #0284c7;
+  color: white;
+  padding: 14px;
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #0369a1;
+}
+
+.progress-bar-container {
+  background: #e2e8f0;
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background: var(--primary);
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.feedback-box {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  display: none;
+}
+
+.feedback-box.correct {
+  display: block;
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.feedback-box.incorrect {
+  display: block;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 .tab-content { display: none; }
@@ -208,7 +345,6 @@ input, textarea, select {
 .muted { color: var(--text-muted); }
 .italic { font-style: italic; }
 .subtitle { color: var(--text-muted); }
-
 </style>
 </head>
 <body>
@@ -257,7 +393,7 @@ input, textarea, select {
     </div>
 
     <div id="slide-stage" class="slide-stage">
-      <!-- Slides injected by script.js -->
+      <!-- Slides injected by script -->
     </div>
 
     <div class="deck-controls">
@@ -271,7 +407,7 @@ input, textarea, select {
     <h3>Lesson Resource & Reference Hub</h3>
     <p class="muted">Access official course references below.</p>
     <div id="resource-list">
-      <!-- Resources injected by script.js -->
+      <!-- Resources injected by script -->
     </div>
   </div>
 
@@ -279,8 +415,7 @@ input, textarea, select {
   <div id="form-tab" class="card tab-content">
     <h3>Student Work Checkpoint & Reflection</h3>
     <form id="checkpoint-form" onsubmit="event.preventDefault(); window.print();">
-      <!-- Dynamic form fields injected by script.js -->
-      <button type="submit" class="submit-btn">Print this page and turn into the Red Basket!</button>
+      <!-- Dynamic form fields injected by script -->
     </form>
   </div>
 
@@ -290,18 +425,18 @@ input, textarea, select {
 let currentSlide = 1;
 let totalSlides = 1;
 let bellringers = [];
+let formDataCache = [];
 
 // Stock image pool for default visual slides
 const stockImagePool = [
-  'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&q=80', // Turtle / Nature
-  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80', // Water / Earth-Diver
-  'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80', // Ecology / Forest
-  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=300&q=80', // Campfire / Orality
-  'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=300&q=80', // Literature / History
-  'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=300&q=80'  // Writing Workshop
+  'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=300&q=80'
 ];
 
-// Emoji fallback pool
 const iconPool = ['🐢', '🌊', '🌱', '🗣️', '☯️', '📝'];
 
 function renderSlides(slides) {
@@ -313,9 +448,7 @@ function renderSlides(slides) {
     wrapper.className = 'slide' + (index === 0 ? ' active' : '');
     wrapper.id = `slide-${index + 1}`;
 
-    // Priority 1: slide.image OR Stock Web Image
     const imageUrl = slide.image || stockImagePool[index % stockImagePool.length];
-    // Fallback: slide.icon OR Emoji Pool
     const fallbackEmoji = slide.icon || iconPool[index % iconPool.length];
 
     const visualMediaHTML = `
@@ -347,6 +480,7 @@ function renderSlides(slides) {
     stage.appendChild(wrapper);
   });
 }
+
 function initLesson(data) {
   bellringers = data.bellringers || [];
   totalSlides = (data.slides || []).length || 1;
@@ -403,6 +537,11 @@ function renderResources(resources) {
     resourceList = [resources];
   }
 
+  if (resourceList.length === 0 || (resourceList.length === 1 && resourceList[0] === "None")) {
+    container.innerHTML = '<p class="muted">No additional external resource attachments required for this lesson.</p>';
+    return;
+  }
+
   resourceList.forEach(res => {
     const card = document.createElement('div');
     card.className = 'resource-card';
@@ -442,43 +581,182 @@ function renderResources(resources) {
 
 function renderForm(fields) {
   const form = document.getElementById('checkpoint-form');
-  const submitBtn = form.querySelector('.submit-btn');
+  formDataCache = Array.isArray(fields) ? fields : [];
+  
   form.innerHTML = '';
 
-  const fieldList = Array.isArray(fields) ? fields : [];
+  if (!formDataCache.length) {
+    form.innerHTML = '<p class="muted">No questions specified for this checkpoint.</p>';
+    return;
+  }
 
-  fieldList.forEach(field => {
+  // Live Progress Indicator
+  const progressWrapper = document.createElement('div');
+  progressWrapper.style.marginBottom = '20px';
+  progressWrapper.innerHTML = `
+    <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:6px; font-size:0.9em; color:var(--text-muted);">
+      <span>Checkpoint Progress</span>
+      <span id="form-progress-text">0 of ${formDataCache.length} Answered</span>
+    </div>
+    <div class="progress-bar-container">
+      <div id="form-progress-fill" class="progress-bar-fill"></div>
+    </div>
+  `;
+  form.appendChild(progressWrapper);
+
+  formDataCache.forEach((field, index) => {
     const group = document.createElement('div');
     group.className = 'form-group';
+    group.id = `group_q_${index}`;
 
-    const label = field.label || field.prompt || `Question ${field.field_id || ''}`.trim() || 'Question';
-    const id = `field_${(field.field_id || label).toString().replace(/\s+/g, '_').toLowerCase()}`;
+    const qNum = field.id || field.field_id || (index + 1);
+    const qText = field.question || field.label || field.prompt || `Question ${qNum}`;
+    const fieldId = `field_${qNum}`;
 
     let inputHTML = '';
-    if (field.type === 'short_answer' || field.type === 'short_text' || field.type === 'text') {
-      inputHTML = `<input type="text" id="${id}" ${field.required ? 'required' : ''} />`;
-    } else if (field.type === 'date') {
-      inputHTML = `<input type="date" id="${id}" ${field.required ? 'required' : ''} />`;
-    } else if (field.type === 'long_text' || field.type === 'quote_citation' || field.type === 'reflection') {
-      inputHTML = `<textarea id="${id}" rows="5" ${field.required ? 'required' : ''}></textarea>`;
-    } else if (field.type === 'multiple_choice' || field.type === 'true_false') {
-      const options = field.type === 'true_false' ? ['True', 'False'] : (field.options || []);
-      inputHTML = options.map((option, index) => `<label><input type="radio" id="${id}_${index}" name="${id}" value="${option}" ${field.required ? 'required' : ''} /> ${option}</label>`).join('<br/>');
-    } else if (field.type === 'checkbox') {
-      inputHTML = (field.options || []).map((option, index) => `<label><input type="checkbox" id="${id}_${index}" name="${id}" value="${option}" /> ${option}</label>`).join('<br/>');
-    } else if (field.type === 'rating_scale') {
-      inputHTML = `<select id="${id}">${(field.options || []).map(o => `<option>${o}</option>`).join('')}</select>`;
-    } else if (field.type === 'select_rubric') {
-      inputHTML = `<select id="${id}"><option>-- Select Rubric Benchmark Level --</option>${(field.options || []).map(o => `<option>${o}</option>`).join('')}</select>`;
-    } else if (field.type === 'checkbox_group' || field.type === 'multi_select') {
-      inputHTML = (field.options || []).map(o => `<label><input type="checkbox" name="${id}" value="${o}" /> ${o}</label>`).join('<br/>');
+    const fieldType = (field.type || 'short_answer').toLowerCase();
+
+    if (['short_answer', 'short_text', 'text', 'fill_in_blank'].includes(fieldType)) {
+      inputHTML = `<input type="text" id="${fieldId}" name="${fieldId}" placeholder="Type your response here..." oninput="updateFormProgress()" />`;
+    } else if (fieldType === 'date') {
+      inputHTML = `<input type="date" id="${fieldId}" name="${fieldId}" onchange="updateFormProgress()" />`;
+    } else if (['long_text', 'quote_citation', 'reflection', 'essay', 'paragraph'].includes(fieldType)) {
+      inputHTML = `<textarea id="${fieldId}" name="${fieldId}" rows="4" placeholder="Write your full answer here..." oninput="autoExpandTextarea(this); updateFormProgress()"></textarea>`;
+    } else if (['multiple_choice', 'true_false'].includes(fieldType)) {
+      const options = fieldType === 'true_false' ? ['True', 'False'] : (field.options || []);
+      const optionCards = options.map((opt, optIdx) => {
+        const optId = `${fieldId}_opt_${optIdx}`;
+        return `
+          <label class="option-card" for="${optId}">
+            <input type="radio" id="${optId}" name="${fieldId}" value="${opt.replace(/"/g, '&quot;')}" onchange="updateFormProgress()" />
+            <span>${opt}</span>
+          </label>
+        `;
+      }).join('');
+      inputHTML = `<div class="options-grid">${optionCards}</div>`;
+    } else if (['checkbox', 'checkbox_group', 'multi_select'].includes(fieldType)) {
+      const options = field.options || ['Selected'];
+      const optionCards = options.map((opt, optIdx) => {
+        const optId = `${fieldId}_opt_${optIdx}`;
+        return `
+          <label class="option-card" for="${optId}">
+            <input type="checkbox" id="${optId}" name="${fieldId}" value="${opt.replace(/"/g, '&quot;')}" onchange="updateFormProgress()" />
+            <span>${opt}</span>
+          </label>
+        `;
+      }).join('');
+      inputHTML = `<div class="options-grid">${optionCards}</div>`;
+    } else if (['rating_scale', 'select_rubric', 'select', 'dropdown'].includes(fieldType)) {
+      const options = field.options || [];
+      const defaultLabel = fieldType === 'select_rubric' ? '-- Select Rubric Benchmark Level --' : '-- Select an Option --';
+      const optionsHTML = `<option value="">${defaultLabel}</option>` + options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+      inputHTML = `<select id="${fieldId}" name="${fieldId}" onchange="updateFormProgress()">${optionsHTML}</select>`;
     }
 
-    group.innerHTML = `<label for="${id}">${label}</label>${inputHTML}`;
+    group.innerHTML = `
+      <label class="question-title" for="${fieldId}">
+        <span style="color:var(--primary); margin-right:4px;">${qNum}.</span> ${qText}
+      </label>
+      ${inputHTML}
+      <div id="feedback_${qNum}" class="feedback-box"></div>
+    `;
+
     form.appendChild(group);
   });
 
-  if (submitBtn) form.appendChild(submitBtn);
+  // Action Buttons
+  const actionsDiv = document.createElement('div');
+  actionsDiv.className = 'form-actions';
+  actionsDiv.innerHTML = `
+    <button type="button" class="btn-secondary" onclick="checkAnswers()">Check / Self-Grade Work</button>
+    <button type="submit" class="submit-btn">Print this page and turn into the Red Basket!</button>
+  `;
+  form.appendChild(actionsDiv);
+
+  updateFormProgress();
+}
+
+function autoExpandTextarea(textarea) {
+  textarea.style.height = 'auto';
+  textarea.style.height = (textarea.scrollHeight) + 'px';
+}
+
+function updateFormProgress() {
+  if (!formDataCache || !formDataCache.length) return;
+  let answeredCount = 0;
+
+  formDataCache.forEach((field, index) => {
+    const qNum = field.id || field.field_id || (index + 1);
+    const fieldId = `field_${qNum}`;
+    const fieldType = (field.type || '').toLowerCase();
+
+    if (['multiple_choice', 'true_false', 'checkbox', 'checkbox_group', 'multi_select'].includes(fieldType)) {
+      const checked = document.querySelector(`input[name="${fieldId}"]:checked`);
+      if (checked) answeredCount++;
+    } else {
+      const el = document.getElementById(fieldId);
+      if (el && el.value.trim() !== '') answeredCount++;
+    }
+  });
+
+  const fill = document.getElementById('form-progress-fill');
+  const text = document.getElementById('form-progress-text');
+
+  if (fill && text) {
+    const total = formDataCache.length;
+    const pct = Math.round((answeredCount / total) * 100);
+    fill.style.width = pct + '%';
+    text.innerText = `${answeredCount} of ${total} Answered (${pct}%)`;
+  }
+}
+
+function checkAnswers() {
+  if (!formDataCache || !formDataCache.length) return;
+
+  let totalScored = 0;
+  let correctCount = 0;
+
+  formDataCache.forEach((field, index) => {
+    const qNum = field.id || field.field_id || (index + 1);
+    const fieldId = `field_${qNum}`;
+    const feedbackEl = document.getElementById(`feedback_${qNum}`);
+    if (!feedbackEl) return;
+
+    const fieldType = (field.type || '').toLowerCase();
+    const correctAnswer = field.correct_answer || field.answer;
+
+    if (!correctAnswer) {
+      feedbackEl.style.display = 'none';
+      return;
+    }
+
+    totalScored++;
+    let studentAnswer = '';
+
+    if (['multiple_choice', 'true_false'].includes(fieldType)) {
+      const checked = document.querySelector(`input[name="${fieldId}"]:checked`);
+      if (checked) studentAnswer = checked.value;
+    } else {
+      const el = document.getElementById(fieldId);
+      if (el) studentAnswer = el.value.trim();
+    }
+
+    if (!studentAnswer) {
+      feedbackEl.className = 'feedback-box incorrect';
+      feedbackEl.innerHTML = `<strong>Not Answered.</strong> Expected Answer: <em>${correctAnswer}</em>`;
+    } else if (studentAnswer.toLowerCase() === correctAnswer.toLowerCase() || correctAnswer.toLowerCase().includes(studentAnswer.toLowerCase())) {
+      correctCount++;
+      feedbackEl.className = 'feedback-box correct';
+      feedbackEl.innerHTML = `✓ <strong>Correct!</strong> ${correctAnswer}`;
+    } else {
+      feedbackEl.className = 'feedback-box incorrect';
+      feedbackEl.innerHTML = `✕ <strong>Incorrect.</strong> Your answer: "<em>${studentAnswer}</em>". Correct Answer: <strong>${correctAnswer}</strong>`;
+    }
+  });
+
+  if (totalScored > 0) {
+    alert(`Self-Check Complete!\n\nScore: ${correctCount} / ${totalScored} correct (${Math.round((correctCount / totalScored) * 100)}%)`);
+  }
 }
 
 function switchTab(key) {
@@ -496,7 +774,104 @@ function switchTab(key) {
     document.getElementById('form-tab').classList.add('active');
   }
 }
-window.addEventListener('DOMContentLoaded', () => initLesson({"day": 24, "date": "October 5", "subject": "Basic Broadcast Technology: A CTE Pathway Course", "unit": "Unit 6: Basic Editing Concepts", "topic": "Editing Foundations: Timeline Workflow", "primary_focus": "Navigating the Non-Linear Editing (NLE) workspace and importing media Assets.", "core_objectives": "Organize a project file structure and assemble a basic rough cut Timeline.", "weekly_standards_focus": ["CTB.12.03 (Editing Principles, Continuity, & Emphasis)", "CTB.01.03 (NLE Technical Terminology)"], "bellringers": ["Define Non-Linear Editing (NLE) and explain how it differs from linear video editing.", "Identify the purpose of a scratch disk and media cache in an NLE environment.", "List three common broadcast video file formats and their native container extensions.", "Explain why file directory structure is critical before importing raw assets into an NLE project."], "slides": [{"title": "Introduction to Non-Linear Editing (NLE)", "standard": "CTB.01.03", "bullets": ["NLE allows non-destructive access to raw video and audio media files at any point.", "Original source files remain unaltered on storage drives during timeline editing operations.", "Digital playheads enable instant frame-accurate playback across multi-track project sequences."], "callout": "NLE non-destructive editing preserves master clips while storing edit instructions in lightweight project files."}, {"title": "Understanding the NLE Workspace Layout", "standard": "CTB.01.03", "bullets": ["The Project Panel serves as the central hub for organizing raw media, sequences, and bins.", "The Source Monitor allows editors to preview raw footage and select In/Out points before editing.", "The Program Monitor renders real-time visual output of the active sequence timeline."], "callout": "Mastering four-quadrant interface navigation increases editing speed and minimizes workflow friction."}, {"title": "Media Asset Management & Bin Structures", "standard": "CTB.01.03", "bullets": ["Establish strict OS directory naming conventions before launching the NLE software.", "Create dedicated bins inside the project for Footage, Audio, Graphics, B-Roll, and Sequences.", "Maintain relinking integrity by preserving absolute file path destinations on media drives."], "callout": "A standardized bin hierarchy prevents missing media relinking errors during post-production workflow."}, {"title": "Importing Media & Codec Standards", "standard": "CTB.01.03", "bullets": ["Import media via media browser panels to preserve metadata and camera folder hierarchies.", "Differentiate between intra-frame codecs (ProRes, DNxHD) and inter-frame codecs (H.264, HEVC).", "Utilize proxy files when editing high-bitrate 4K footage on standard workstation hardware."], "callout": "Native editing requires matching hardware capabilities to clip resolution and compression formats."}, {"title": "Anatomy of the NLE Timeline Panel", "standard": "CTB.01.03", "bullets": ["Video tracks (V1, V2, V3) stack vertically, with higher tracks overlaying lower visual tracks.", "Audio tracks (A1, A2, A3) accommodate mono, stereo, and multichannel audio signals.", "Timecode displays represent time in Hours:Minutes:Seconds:Frames (HH:MM:SS:FF)."], "callout": "Track stacking rules dictate visual hierarchy and composite overlays in broadcast news production."}, {"title": "Setting Project & Sequence Settings", "standard": "CTB.12.03", "bullets": ["Match sequence frame rate (29.97 fps / 59.94 fps) to standard broadcast delivery specs.", "Set sequence display format, pixel aspect ratio, and working audio sampling rates (48 kHz).", "Ensure rough cut sequence dimensions match target distribution output standards."], "callout": "Mismatched sequence settings lead to frame blending, dropouts, or aspect ratio distortion."}, {"title": "Selecting Source Clips: In and Out Points", "standard": "CTB.01.03", "bullets": ["Load raw clips into the Source Monitor to evaluate interview soundbites and visual takes.", "Set precise mark-in (I) and mark-out (O) points to isolate selected usable segments.", "Monitor source audio waveforms to ensure speech start and end points avoid clipping."], "callout": "Setting clean In and Out points prior to timeline insertion saves time during rough assembly."}, {"title": "Overwrite vs. Insert Edit Operations", "standard": "CTB.01.03", "bullets": ["Overwrite edits replace existing timeline content without altering overall sequence duration.", "Insert edits splice new clip content into the timeline, shifting subsequent media rightward.", "Choose target track indicators (V1/A1) to dictate precise destination tracks on insertion."], "callout": "Understanding insert versus overwrite prevents accidental timeline ripple effects and sync loss."}, {"title": "Assembling the Rough Cut Sequence", "standard": "CTB.12.03", "bullets": ["Lay down primary A-roll soundbites along the V1/A1 tracks to establish narrative flow.", "Maintain visual continuity and chronological coherence during initial clip assembly.", "Avoid applying transitions or effects during the initial rough cut assembly phase."], "callout": "A solid rough cut focuses strictly on story structure, pace, and soundbite clarity over visual polish."}, {"title": "Basic Editing Tools: Selection, Blade, & Razor", "standard": "CTB.01.03", "bullets": ["Use the Selection Tool (V) for moving, selecting, and adjusting clip placements.", "Apply the Razor/Blade Tool (C) to slice clips into sub-segments at playhead positions.", "Utilize Ripple Edit (B) to trim clip handles while automatically closing timeline gaps."], "callout": "Keyboard shortcut fluency drastically accelerates technical timeline editing procedures."}, {"title": "Audio Routing and Basic Track Levels", "standard": "CTB.12.03", "bullets": ["Ensure dialogue levels peak consistently between -12 dB and -6 dB on reference VU meters.", "Separate dialogue, background ambient sound, and voiceover onto designated audio tracks.", "Apply keyframe audio envelopes to eliminate harsh cuts or abrupt audio transitions."], "callout": "Broadcast standard audio mixing requires dialogue clarity and controlled dynamic range."}, {"title": "Saving, Auto-Save, and Project Archival", "standard": "CTB.01.03", "bullets": ["Configure automated project autosave intervals to mitigate potential software crash loss.", "Execute manual iterative saves using versioning tags (e.g., NewsSegment_v01.prproj).", "Consolidate and archive project files and dependent assets upon project completion."], "callout": "Disciplined project archiving guarantees media asset integrity for future updates or rebroadcast."}], "resources": ["None"], "form": [{"id": 1, "type": "multiple_choice", "question": "What is the primary advantage of Non-Linear Editing (NLE) over linear tape editing?", "options": ["Destructive file rendering", "Random frame-accurate access without tape rewinding", "Mandatory sequence exporting", "Analog signal compression"], "correct_answer": "Random frame-accurate access without tape rewinding"}, {"id": 2, "type": "multiple_choice", "question": "Which NLE workspace panel displays the actual visual output of the active timeline sequence?", "options": ["Source Monitor", "Project Panel", "Program Monitor", "Media Browser"], "correct_answer": "Program Monitor"}, {"id": 3, "type": "multiple_choice", "question": "Which operation places a clip into the timeline by pushing existing content down the track?", "options": ["Overwrite Edit", "Insert Edit", "Ripple Delete", "Slide Edit"], "correct_answer": "Insert Edit"}, {"id": 4, "type": "short_answer", "question": "Define the function of setting 'In' (I) and 'Out' (O) points in the Source Monitor.", "correct_answer": "In and Out points define the exact start and end frames of a media clip to be inserted onto the timeline."}, {"id": 5, "type": "short_answer", "question": "Why should video dialogue audio peak between -12 dB and -6 dB in broadcast production?", "correct_answer": "This range leaves sufficient headroom to avoid digital clipping/distortion while maintaining clear broadcast loudness."}, {"id": 6, "type": "true_false", "question": "An Overwrite edit increases the total length of the sequence timeline.", "correct_answer": "False"}, {"id": 7, "type": "true_false", "question": "Non-linear editing software alters the original raw source files stored on the media drive.", "correct_answer": "False"}, {"id": 8, "type": "multiple_choice", "question": "What standard sampling rate is used for broadcast digital audio in NLE projects?", "options": ["44.1 kHz", "48 kHz", "96 kHz", "22.05 kHz"], "correct_answer": "48 kHz"}, {"id": 9, "type": "fill_in_blank", "question": "The vertical arrangement of tracks in an NLE timeline means that clips on Higher tracks ________ clips on Lower tracks.", "correct_answer": "overlay / obscure"}, {"id": 10, "type": "short_answer", "question": "Explain the purpose of organizing raw media into separate project bins before editing.", "correct_answer": "Bins maintain organized folder structures, speed up asset location, and preserve file relinking paths."}]}));
+
+window.addEventListener('DOMContentLoaded', () => initLesson({
+  "day": 24,
+  "date": "October 5",
+  "subject": "Basic Broadcast Technology: A CTE Pathway Course",
+  "unit": "Unit 6: Basic Editing Concepts",
+  "topic": "Editing Foundations: Timeline Workflow",
+  "primary_focus": "Navigating the Non-Linear Editing (NLE) workspace and importing media Assets.",
+  "core_objectives": "Organize a project file structure and assemble a basic rough cut Timeline.",
+  "weekly_standards_focus": ["CTB.12.03 (Editing Principles, Continuity, & Emphasis)", "CTB.01.03 (NLE Technical Terminology)"],
+  "bellringers": [
+    "Define Non-Linear Editing (NLE) and explain how it differs from linear video editing.",
+    "Identify the purpose of a scratch disk and media cache in an NLE environment.",
+    "List three common broadcast video file formats and their native container extensions.",
+    "Explain why file directory structure is critical before importing raw assets into an NLE project."
+  ],
+  "slides": [
+    {"title": "Introduction to Non-Linear Editing (NLE)", "standard": "CTB.01.03", "bullets": ["NLE allows non-destructive access to raw video and audio media files at any point.", "Original source files remain unaltered on storage drives during timeline editing operations.", "Digital playheads enable instant frame-accurate playback across multi-track project sequences."], "callout": "NLE non-destructive editing preserves master clips while storing edit instructions in lightweight project files."},
+    {"title": "Understanding the NLE Workspace Layout", "standard": "CTB.01.03", "bullets": ["The Project Panel serves as the central hub for organizing raw media, sequences, and bins.", "The Source Monitor allows editors to preview raw footage and select In/Out points before editing.", "The Program Monitor renders real-time visual output of the active sequence timeline."], "callout": "Mastering four-quadrant interface navigation increases editing speed and minimizes workflow friction."},
+    {"title": "Media Asset Management & Bin Structures", "standard": "CTB.01.03", "bullets": ["Establish strict OS directory naming conventions before launching the NLE software.", "Create dedicated bins inside the project for Footage, Audio, Graphics, B-Roll, and Sequences.", "Maintain relinking integrity by preserving absolute file path destinations on media drives."], "callout": "A standardized bin hierarchy prevents missing media relinking errors during post-production workflow."},
+    {"title": "Importing Media & Codec Standards", "standard": "CTB.01.03", "bullets": ["Import media via media browser panels to preserve metadata and camera folder hierarchies.", "Differentiate between intra-frame codecs (ProRes, DNxHD) and inter-frame codecs (H.264, HEVC).", "Utilize proxy files when editing high-bitrate 4K footage on standard workstation hardware."], "callout": "Native editing requires matching hardware capabilities to clip resolution and compression formats."},
+    {"title": "Anatomy of the NLE Timeline Panel", "standard": "CTB.01.03", "bullets": ["Video tracks (V1, V2, V3) stack vertically, with higher tracks overlaying lower visual tracks.", "Audio tracks (A1, A2, A3) accommodate mono, stereo, and multichannel audio signals.", "Timecode displays represent time in Hours:Minutes:Seconds:Frames (HH:MM:SS:FF)."], "callout": "Track stacking rules dictate visual hierarchy and composite overlays in broadcast news production."},
+    {"title": "Setting Project & Sequence Settings", "standard": "CTB.12.03", "bullets": ["Match sequence frame rate (29.97 fps / 59.94 fps) to standard broadcast delivery specs.", "Set sequence display format, pixel aspect ratio, and working audio sampling rates (48 kHz).", "Ensure rough cut sequence dimensions match target distribution output standards."], "callout": "Mismatched sequence settings lead to frame blending, dropouts, or aspect ratio distortion."},
+    {"title": "Selecting Source Clips: In and Out Points", "standard": "CTB.01.03", "bullets": ["Load raw clips into the Source Monitor to evaluate interview soundbites and visual takes.", "Set precise mark-in (I) and mark-out (O) points to isolate selected usable segments.", "Monitor source audio waveforms to ensure speech start and end points avoid clipping."], "callout": "Setting clean In and Out points prior to timeline insertion saves time during rough assembly."},
+    {"title": "Overwrite vs. Insert Edit Operations", "standard": "CTB.01.03", "bullets": ["Overwrite edits replace existing timeline content without altering overall sequence duration.", "Insert edits splice new clip content into the timeline, shifting subsequent media rightward.", "Choose target track indicators (V1/A1) to dictate precise destination tracks on insertion."], "callout": "Understanding insert versus overwrite prevents accidental timeline ripple effects and sync loss."},
+    {"title": "Assembling the Rough Cut Sequence", "standard": "CTB.12.03", "bullets": ["Lay down primary A-roll soundbites along the V1/A1 tracks to establish narrative flow.", "Maintain visual continuity and chronological coherence during initial clip assembly.", "Avoid applying transitions or effects during the initial rough cut assembly phase."], "callout": "A solid rough cut focuses strictly on story structure, pace, and soundbite clarity over visual polish."},
+    {"title": "Basic Editing Tools: Selection, Blade, & Razor", "standard": "CTB.01.03", "bullets": ["Use the Selection Tool (V) for moving, selecting, and adjusting clip placements.", "Apply the Razor/Blade Tool (C) to slice clips into sub-segments at playhead positions.", "Utilize Ripple Edit (B) to trim clip handles while automatically closing timeline gaps."], "callout": "Keyboard shortcut fluency drastically accelerates technical timeline editing procedures."},
+    {"title": "Audio Routing and Basic Track Levels", "standard": "CTB.12.03", "bullets": ["Ensure dialogue levels peak consistently between -12 dB and -6 dB on reference VU meters.", "Separate dialogue, background ambient sound, and voiceover onto designated audio tracks.", "Apply keyframe audio envelopes to eliminate harsh cuts or abrupt audio transitions."], "callout": "Broadcast standard audio mixing requires dialogue clarity and controlled dynamic range."},
+    {"title": "Saving, Auto-Save, and Project Archival", "standard": "CTB.01.03", "bullets": ["Configure automated project autosave intervals to mitigate potential software crash loss.", "Execute manual iterative saves using versioning tags (e.g., NewsSegment_v01.prproj).", "Consolidate and archive project files and dependent assets upon project completion."], "callout": "Disciplined project archiving guarantees media asset integrity for future updates or rebroadcast."}
+  ],
+  "resources": ["None"],
+  "form": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "What is the primary advantage of Non-Linear Editing (NLE) over linear tape editing?",
+      "options": ["Destructive file rendering", "Random frame-accurate access without tape rewinding", "Mandatory sequence exporting", "Analog signal compression"],
+      "correct_answer": "Random frame-accurate access without tape rewinding"
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "Which NLE workspace panel displays the actual visual output of the active timeline sequence?",
+      "options": ["Source Monitor", "Project Panel", "Program Monitor", "Media Browser"],
+      "correct_answer": "Program Monitor"
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "Which operation places a clip into the timeline by pushing existing content down the track?",
+      "options": ["Overwrite Edit", "Insert Edit", "Ripple Delete", "Slide Edit"],
+      "correct_answer": "Insert Edit"
+    },
+    {
+      "id": 4,
+      "type": "short_answer",
+      "question": "Define the function of setting 'In' (I) and 'Out' (O) points in the Source Monitor.",
+      "correct_answer": "In and Out points define the exact start and end frames of a media clip to be inserted onto the timeline."
+    },
+    {
+      "id": 5,
+      "type": "short_answer",
+      "question": "Why should video dialogue audio peak between -12 dB and -6 dB in broadcast production?",
+      "correct_answer": "This range leaves sufficient headroom to avoid digital clipping/distortion while maintaining clear broadcast loudness."
+    },
+    {
+      "id": 6,
+      "type": "true_false",
+      "question": "An Overwrite edit increases the total length of the sequence timeline.",
+      "correct_answer": "False"
+    },
+    {
+      "id": 7,
+      "type": "true_false",
+      "question": "Non-linear editing software alters the original raw source files stored on the media drive.",
+      "correct_answer": "False"
+    },
+    {
+      "id": 8,
+      "type": "multiple_choice",
+      "question": "What standard sampling rate is used for broadcast digital audio in NLE projects?",
+      "options": ["44.1 kHz", "48 kHz", "96 kHz", "22.05 kHz"],
+      "correct_answer": "48 kHz"
+    },
+    {
+      "id": 9,
+      "type": "fill_in_blank",
+      "question": "The vertical arrangement of tracks in an NLE timeline means that clips on Higher tracks ________ clips on Lower tracks.",
+      "correct_answer": "overlay / obscure"
+    },
+    {
+      "id": 10,
+      "type": "short_answer",
+      "question": "Explain the purpose of organizing raw media into separate project bins before editing.",
+      "correct_answer": "Bins maintain organized folder structures, speed up asset location, and preserve file relinking paths."
+    }
+  ]
+}));
 </script>
 </body>
 </html>
